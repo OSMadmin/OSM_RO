@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: osm-ro
-        image: index.docker.io/osmhub/osm-ro #gcr.io/heptio-images/ks-guestbook-demo:0.2
+        image: index.docker.io/osmhub/osm_ro #gcr.io/heptio-images/ks-guestbook-demo:0.2
         #name: sample-nodejs-app
         ports:
         - containerPort: 80
