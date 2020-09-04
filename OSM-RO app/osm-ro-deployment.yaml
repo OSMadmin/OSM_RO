@@ -34,7 +34,7 @@ spec:
         command: ["sh", "-c", "until nc -zvw1 mysql 3306; do  sleep 3 ; done; exit 0"]
       containers:
       - name: ro
-        image: opensourcemano/ro:8
+        image: index.docker.io/osmhub/osm_ro:v8.0.1 #opensourcemano/ro:8
         ports:
         - containerPort: 9090
           protocol: TCP
