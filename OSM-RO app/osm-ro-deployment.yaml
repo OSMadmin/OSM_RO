@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ro
+spec:
+  clusterIP: None
+  ports:
+  - port: 9090
+    protocol: TCP
+    targetPort: 9090
+  selector:
+    app: ro
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ro
+  labels:
+    app: ro
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ro
+  template:
+    metadata:
+      labels:
+        app: ro
+    spec:
+      initContainers:
+      - name: ro-db-test
+        image: alpine:latest
+        command: ["sh", "-c", "until nc -zvw1 mysql 3306; do  sleep 3 ; done; exit 0"]
+      containers:
+      - name: ro
+        image: opensourcemano/ro:8
+        ports:
+        - containerPort: 9090
+          protocol: TCP
+        env:
+         - name: RO_DB_HOST
+           value: mysql
+        envFrom:
+        - secretRef:
+           name: ro-secret
+        volumeMounts:
+         - name: ro
+           mountPath: /var/log/osm
+      volumes:
+      - name: ro
+        hostPath:
+         path: /var/lib/osm/osm/osm_ro/_data
